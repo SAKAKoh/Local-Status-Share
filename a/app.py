@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
-from datetime import datetime
+import os 
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -8,9 +9,31 @@ DATA_FILE = 'posts.json'
 
 def load_data():
     try:
+        if not os.path.exists(DATA_FILE):
+            return []
+            
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
+            
+            posts = json.load(f)
+        
+        now = datetime.now()
+        fresh_posts = []
+        for post in posts:
+            if 'full_time' not in post:
+                continue
+                
+            post_time = datetime.strptime(post['full_time'], '%Y-%m-%d %H:%M:%S')
+            
+            
+            if now - post_time < timedelta(hours=1):
+                fresh_posts.append(post)
+        
+        
+        save_data(fresh_posts)
+        
+        return fresh_posts
+    
+    except (FileNotFoundError, json.JSONDecodeError):
         return []
 
 def save_data(posts):
@@ -30,11 +53,13 @@ def post():
     
     if name and status:
         posts = load_data()
+        now = datetime.now() 
         new_post = {
             'name': name,
             'status': status,
             'comment': comment,
-            'time': datetime.now().strftime('%m/%d %H:%M')
+            'full_time': now.strftime('%Y-%m-%d %H:%M:%S'), 
+            'time': now.strftime('%m/%d %H:%M')
         }
         posts.append(new_post)
         save_data(posts)
