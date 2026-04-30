@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヨコハマ・ナウ</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .status-open { background: #e1f5fe; color: #0288d1; }
+        .status-closed { background: #ffebee; color: #d32f2f; }
+        form { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        input, select, textarea { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>トツカ・ナウ</h1>
+    <p>自習室や施設の「今の状況」を共有しよう</p>
+
+    <form action="/post" method="POST">
+        <input type="text" name="name" placeholder="施設名（例：飲食店、）" required>
+        <select name="status">
+            <option value="営業中">営業中（やってた！）</option>
+            <option value="休館・休み">休館・休み（やってなかった…）</option>
+            <option value="混雑">混雑（座れなかった）</option>
+            <option value="空いてる">空いてる（快適！）</option>
+        </select>
+        <textarea name="comment" placeholder="一言メモ（任意）"></textarea>
+        <button type="submit">投稿する</button>
+    </form>
+
+    <div id="posts">
+        {% for post in posts %}
+        <div class="card">
+            <strong>{{ post.name }}</strong> 
+            <span class="status-tag {% if '休み' in post.status %}status-closed{% else %}status-open{% endif %}">
+                {{ post.status }}
+            </span>
+            <p>{{ post.comment }}</p>
+            <small style="color: #888;">{{ post.time }}</small>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
