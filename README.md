@@ -31,3 +31,7 @@
 ・現在はシンプルなUIですが、状況がよりわかるデザインや色やレイアウトにすることでシンプルでありながらもさらに使いやすいアプリにできると考えています。
 
 ---
+## ・デモ動画
+デモを見る→https://drive.google.com/file/d/1XsH722mF4Shpx9BSkYNiEFsntARkjmiC/view?usp=sharing
+
+---
